@@ -30,3 +30,27 @@ Copy the connection string from the MyCodeCamp.Data project to MyCodeCamp
 
 Add `services.AddMvc().AddJsonOptions` to avoid circular serialization in EF Entities.
 
+## Modifying Data via an API
+
+### Designing URIs
+Helpful URI design
+
+![URI Design](Images/201709161546-URI_Design.png)
+
+### Demo: Model Binding
+Use the `FromBody` tribute to accept a JSON payload. Without it, the properties are not generated.
+
+![FromBody](Images/201709161556-From_Body_Attribute.png)
+
+SoapUI JSON request
+
+![JSON Payload](Images/201709161557-JSON_Payload.png)
+
+### Demo: Logging
+
+Very useful!
+
+- Configure in Startup.cs
+- Add the DI in the controller
+- Enjoy!
+
