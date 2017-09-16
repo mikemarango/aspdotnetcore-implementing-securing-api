@@ -1,20 +1,32 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Implementing and Securing an API with ASP.NET Core
+Started the tutorial on 2017-09-16.
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+The MyCodeCamp.Data project found in GitHub is using .NET Core 1.0. I updated everything to use the new [.NET Core 2.0](https://blogs.msdn.microsoft.com/dotnet/2017/08/14/announcing-net-core-2-0/).
+The Claims and Roles are not found after migrating the solution to .NET Core 2.0. I will work on that later in the course.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Getting Started
+See the [MyCodeCamp](MyCodeCamp) project.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Reading Data
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+### First Controller
+Avoid launching the browser
+
+![Avoid launching the browser](Images/201709160916-Avoid_Launching_The_Browser.png)
+
+### The Data Model
+
+The MyCodeCamp.Data project is found here: https://github.com/shawnwildermuth/WebAPICoreResources. (In the future that project should be a library. There's a comment on the Program.cs file).
+
+The tutorial showed a CMD `dotnet ef database update` to create the database. I actually did it in the Package Manager Console `Update-Database`
+
+### Getting Collections
+
+Copy the connection string from the MyCodeCamp.Data project to MyCodeCamp
+
+![Copy the connection string](Images/201709161023-Copy_The_Connection_String.png)
+
+### Getting Items
+
+Add `services.AddMvc().AddJsonOptions` to avoid circular serialization in EF Entities.
+
