@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,8 @@ namespace MyCodeCamp
             services.AddScoped<ICampRepository, CampRepository>();
             services.AddDbContext<CampContext>(ServiceLifetime.Scoped); // I think the Scoped is the default anyway
             services.AddScoped<CampDbInitializer>();
+
+            services.AddAutoMapper();
 
             services.AddMvc().AddJsonOptions(opt =>
             {

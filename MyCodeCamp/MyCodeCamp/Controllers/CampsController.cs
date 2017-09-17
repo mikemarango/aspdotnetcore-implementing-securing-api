@@ -1,21 +1,27 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
 using System.Threading.Tasks;
+using AutoMapper;
+using MyCodeCamp.Models;
 
 namespace MyCodeCamp.Controllers
 {
     [Route("api/[controller]")]
-    public class CampsController : Controller
+    public class CampsController : BaseController
     {
         private readonly ILogger<CampsController> logger;
+        private readonly IMapper mapper;
         private readonly ICampRepository repository;
 
-        public CampsController(ILogger<CampsController> logger, ICampRepository repository)
+        public CampsController(ILogger<CampsController> logger, IMapper mapper, ICampRepository repository)
         {
             this.logger = logger;
+            this.mapper = mapper;
             this.repository = repository;
         }
 
@@ -24,20 +30,20 @@ namespace MyCodeCamp.Controllers
         {
             var camps = repository.GetAllCamps();
 
-            return Ok(camps);
+            return Ok(mapper.Map<IEnumerable<CampModel>>(camps));
         }
 
-        [HttpGet("{id}", Name = "CampGet")]
-        public IActionResult Get(int id, bool includeSpeakers = false)
+        [HttpGet("{moniker}", Name = "CampGet")]
+        public IActionResult Get(string moniker, bool includeSpeakers = false)
         {
             try
             {
-                var camp = includeSpeakers ? repository.GetCampWithSpeakers(id) : repository.GetCamp(id);
+                var camp = includeSpeakers ? repository.GetCampByMonikerWithSpeakers(moniker) : repository.GetCampByMoniker(moniker);
 
                 if (camp == null)
-                    return NotFound($"Camp {id} was not found");
+                    return NotFound($"Camp {moniker} was not found");
 
-                return Ok(camp);
+                return Ok(mapper.Map<CampModel>(camp));
             }
             catch (Exception exception)
             {
@@ -48,18 +54,23 @@ namespace MyCodeCamp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Camp model)
+        public async Task<IActionResult> Post([FromBody]CampModel model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 logger.LogInformation("Creating a new Code Camp");
 
-                repository.Add(model);
+                var camp = mapper.Map<Camp>(model);
+
+                repository.Add(camp);
 
                 if (await repository.SaveAllAsync())
                 {
-                    var newUri = Url.Link("CampGet", new { id = model.Id });
-                    return Created(newUri, model);
+                    var newUri = Url.Link("CampGet", new { moniker = camp.Moniker });
+                    return Created(newUri, mapper.Map<CampModel>(camp));
                 }
 
                 logger.LogWarning("Could not save Camp to the database");
@@ -72,25 +83,23 @@ namespace MyCodeCamp.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] Camp model)
+        [HttpPut("{moniker}")]
+        public async Task<IActionResult> Put(string moniker, [FromBody] CampModel model)
         {
             try
             {
-                var oldCamp = repository.GetCamp(id);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var oldCamp = repository.GetCampByMoniker(moniker);
 
                 if (oldCamp == null)
-                    return NotFound($"Camp {id} was not found");
-
-                // Map model to the oldCamp
-                oldCamp.Name = model.Name ?? oldCamp.Name;
-                oldCamp.Description = model.Description?? oldCamp.Description;
-                oldCamp.Location = model.Location ?? oldCamp.Location;
-                oldCamp.Length = model.Length > 0 ? model.Length : oldCamp.Length;
-                oldCamp.EventDate = model.EventDate != DateTime.MinValue ? model.EventDate : oldCamp.EventDate;
+                    return NotFound($"Camp {moniker} was not found");
+                
+                mapper.Map(model, oldCamp);
 
                 if (await repository.SaveAllAsync())
-                    return Ok(oldCamp);
+                    return Ok(mapper.Map<CampModel>(oldCamp));
             }
             catch (Exception exception)
             {
@@ -101,14 +110,14 @@ namespace MyCodeCamp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string moniker)
         {
             try
             {
-                var oldCamp = repository.GetCamp(id);
+                var oldCamp = repository.GetCampByMoniker(moniker);
 
                 if (oldCamp == null)
-                    return NotFound($"Camp {id} was not found");
+                    return NotFound($"Camp {moniker} was not found");
 
                 repository.Delete(oldCamp);
 

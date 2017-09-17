@@ -54,3 +54,9 @@ Very useful!
 - Add the DI in the controller
 - Enjoy!
 
+## Entities and Models
+
+### Demo: Customizing Mappings
+
+AutoMapper.Extensions.Microsoft.DependencyInjection added. Very useful!
+
