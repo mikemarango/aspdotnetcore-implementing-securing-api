@@ -60,3 +60,9 @@ Very useful!
 
 AutoMapper.Extensions.Microsoft.DependencyInjection added. Very useful!
 
+## Association in APIs
+
+### Demo: Adding Validation
+
+Using filters to avoid the `if (!ModelState.IsValid)` in every action
+

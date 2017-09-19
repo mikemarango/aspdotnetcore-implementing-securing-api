@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
-using System.Threading.Tasks;
-using AutoMapper;
 using MyCodeCamp.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MyCodeCamp.Filters;
 
 namespace MyCodeCamp.Controllers
 {
     [Route("api/[controller]")]
+    [ValidateModel]
     public class CampsController : BaseController
     {
         private readonly ILogger<CampsController> logger;
@@ -58,9 +59,6 @@ namespace MyCodeCamp.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
                 logger.LogInformation("Creating a new Code Camp");
 
                 var camp = mapper.Map<Camp>(model);
@@ -88,9 +86,6 @@ namespace MyCodeCamp.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
                 var oldCamp = repository.GetCampByMoniker(moniker);
 
                 if (oldCamp == null)
