@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using MyCodeCamp.Data.Entities;
 
 namespace MyCodeCamp.Models
