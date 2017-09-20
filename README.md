@@ -76,3 +76,8 @@ Overriding the default behavior of Cookies Authentication.
 
 I stopped using SoapUI and switched to Postman (desktop) to auto send the received cookie.
 
+## Token Authentication
+
+### Demo: Authorizing with Claims
+
+No comments for this section since I was excited just doing the modules. Bonus: I added a TokenSettings configuration object

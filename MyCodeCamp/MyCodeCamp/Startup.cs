@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,9 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
+using MyCodeCamp.Models;
 using Newtonsoft.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MyCodeCamp
@@ -60,7 +64,30 @@ namespace MyCodeCamp
                 };
             });
 
-            services.AddAuthentication();
+            services.Configure<TokenSettings>(Configuration.GetSection("TokenSettings"));
+            
+            var tokenSettings = Configuration.GetSection("TokenSettings").Get<TokenSettings>();
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = tokenSettings.Issuer,
+                        ValidAudience = tokenSettings.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key))
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SuperUsers", p => p.RequireClaim("SuperUser", "True"));
+            });
 
             services.AddCors(cfg =>
             {

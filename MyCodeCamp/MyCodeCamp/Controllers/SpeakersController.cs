@@ -20,7 +20,7 @@ namespace MyCodeCamp.Controllers
         private readonly ILogger<SpeakersController> logger;
         private readonly IMapper mapper;
         private readonly ICampRepository repository;
-        private UserManager<CampUser> userManager;
+        private readonly UserManager<CampUser> userManager;
 
         public SpeakersController(ILogger<SpeakersController> logger, IMapper mapper, ICampRepository repository, UserManager<CampUser> userManager)
         {
