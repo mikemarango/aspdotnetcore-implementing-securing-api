@@ -66,3 +66,13 @@ AutoMapper.Extensions.Microsoft.DependencyInjection added. Very useful!
 
 Using filters to avoid the `if (!ModelState.IsValid)` in every action
 
+## Securing APIs
+
+### Demo: Using Identity
+
+Overriding the default behavior of Cookies Authentication.
+
+### Demo: Cookie Authentication
+
+I stopped using SoapUI and switched to Postman (desktop) to auto send the received cookie.
+

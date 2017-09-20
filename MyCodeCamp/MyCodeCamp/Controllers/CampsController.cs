@@ -1,16 +1,20 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
+using MyCodeCamp.Filters;
 using MyCodeCamp.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyCodeCamp.Filters;
 
 namespace MyCodeCamp.Controllers
 {
+    [Authorize]
+    [EnableCors("AnyGET")]
     [Route("api/[controller]")]
     [ValidateModel]
     public class CampsController : BaseController
@@ -54,6 +58,7 @@ namespace MyCodeCamp.Controllers
             return BadRequest();
         }
 
+        [EnableCors("Wildermuth")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]CampModel model)
         {

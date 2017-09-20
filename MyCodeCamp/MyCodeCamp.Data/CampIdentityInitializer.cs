@@ -27,12 +27,15 @@ namespace MyCodeCamp.Data
                 if (!await roleManager.RoleExistsAsync("Admin"))
                 {
                     var role = new IdentityRole("Admin");
-                    // TODO: FIX THIS
-                    //role.Claims.Add(new IdentityRoleClaim<string> { ClaimType = "IsAdmin", ClaimValue = "True" });
+
+                    // This used to work in ASP.NET Core 1.x
+                    //role .Claims.Add(new IdentityRoleClaim<string> { ClaimType = "IsAdmin", ClaimValue = "True" });
+
                     await roleManager.CreateAsync(role);
+                    await roleManager.AddClaimAsync(role, new Claim("IsAdmin", "True"));
                 }
 
-                user = new CampUser()
+                user = new CampUser
                 {
                     UserName = "shawnwildermuth",
                     FirstName = "Shawn",
