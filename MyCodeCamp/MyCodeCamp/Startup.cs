@@ -43,36 +43,11 @@ namespace MyCodeCamp
             services.AddIdentity<CampUser, IdentityRole>()
                 .AddEntityFrameworkStores<CampContext>();
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Events = new CookieAuthenticationEvents
-                {
-                    OnRedirectToLogin = ctx =>
-                    {
-                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
-                            ctx.Response.StatusCode = 401;
-
-                        return Task.CompletedTask;
-                    },
-                    OnRedirectToAccessDenied = ctx =>
-                    {
-                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
-                            ctx.Response.StatusCode = 403;
-
-                        return Task.CompletedTask;
-                    }
-                };
-            });
-
             services.Configure<TokenSettings>(Configuration.GetSection("TokenSettings"));
             
             var tokenSettings = Configuration.GetSection("TokenSettings").Get<TokenSettings>();
 
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+            services.AddAuthentication()
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
