@@ -81,3 +81,10 @@ I stopped using SoapUI and switched to Postman (desktop) to auto send the receiv
 ### Demo: Authorizing with Claims
 
 No comments for this section since I was excited just doing the modules. Bonus: I added a TokenSettings configuration object
+
+## Versioning your API
+
+### Demo: Using Versioning Attributes
+
+Using an optional parameter `api-version`, we could add versioning.
+
