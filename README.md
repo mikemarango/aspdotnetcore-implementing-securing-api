@@ -88,3 +88,13 @@ No comments for this section since I was excited just doing the modules. Bonus: 
 
 Using an optional parameter `api-version`, we could add versioning.
 
+## REST Constraints
+
+### Demo: Implementing ETags
+
+ETags == Cache. I didn't do the exercises
+
+### Demo: Implementing Link Collections.
+
+Hypermedia as the Engine of Application State (HATEOAS). I didn't do the exercises.
+
